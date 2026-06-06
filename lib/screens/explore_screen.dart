@@ -25,6 +25,7 @@ class ExploreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<AppController>();
+    final theme = Theme.of(context);
 
     return Scaffold(
       body: SafeArea(
@@ -39,10 +40,10 @@ class ExploreScreen extends StatelessWidget {
                   () => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Explorar incidencias',
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold),
+                        style: theme.textTheme.headlineSmall
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
                       TextField(
@@ -53,7 +54,7 @@ class ExploreScreen extends StatelessWidget {
                           hintText: 'Buscar reportes...',
                           prefixIcon: const Icon(Icons.search),
                           filled: true,
-                          fillColor: Colors.grey[100],
+                          fillColor: theme.inputDecorationTheme.fillColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(14),
                             borderSide: BorderSide.none,
@@ -61,9 +62,9 @@ class ExploreScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 18),
-                      const Text('Sugerencias de categorías',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text('Sugerencias de categorías',
+                          style: theme.textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 10),
                       Wrap(
                         spacing: 10,
@@ -81,15 +82,20 @@ class ExploreScreen extends StatelessWidget {
                                 controller.searchText.value = '';
                               }
                             },
-                            selectedColor: Colors.blue.shade100,
-                            backgroundColor: Colors.blue.shade50,
+                            selectedColor:
+                                theme.colorScheme.primary.withOpacity(0.2),
+                            backgroundColor:
+                                theme.colorScheme.primary.withOpacity(0.1),
                           );
                         }).toList(),
                       ),
                       const SizedBox(height: 20),
                       Expanded(
                         child: controller.filteredReports.isEmpty
-                            ? const Center(child: Text('No hay resultados'))
+                            ? Center(
+                                child: Text('No hay resultados',
+                                    style: theme.textTheme.bodyMedium),
+                              )
                             : RefreshIndicator(
                                 onRefresh: controller.refreshReports,
                                 child: ListView.builder(
@@ -98,6 +104,7 @@ class ExploreScreen extends StatelessWidget {
                                     final report =
                                         controller.filteredReports[index];
                                     return Card(
+                                      color: theme.cardColor,
                                       elevation: 2,
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -108,7 +115,8 @@ class ExploreScreen extends StatelessWidget {
                                           width: 46,
                                           height: 46,
                                           decoration: BoxDecoration(
-                                            color: Colors.blue.shade50,
+                                            color: theme.colorScheme.primary
+                                                .withOpacity(0.12),
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                           ),
@@ -117,11 +125,16 @@ class ExploreScreen extends StatelessWidget {
                                                 _categoryIcon(report.categoria),
                                           ),
                                         ),
-                                        title: Text(report.titulo.isEmpty
-                                            ? 'Sin título'
-                                            : report.titulo),
+                                        title: Text(
+                                          report.titulo.isEmpty
+                                              ? 'Sin título'
+                                              : report.titulo,
+                                          style: theme.textTheme.titleMedium,
+                                        ),
                                         subtitle: Text(
-                                            '${report.estado} • ${report.direccion.isEmpty ? 'Sin dirección' : report.direccion}'),
+                                          '${report.estado} • ${report.direccion.isEmpty ? 'Sin dirección' : report.direccion}',
+                                          style: theme.textTheme.bodySmall,
+                                        ),
                                         onTap: () {
                                           Navigator.push(
                                             context,

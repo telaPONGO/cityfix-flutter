@@ -106,8 +106,8 @@ class ApiService {
       // Debug: log headers (mask token) to detect missing auth header
       try {
         final headers = _headers(auth: true);
-        var auth = headers['Authorization'] ?? 'none';
-        if (auth is String && auth.startsWith('Bearer ')) {
+        final String auth = headers['Authorization'] ?? 'none';
+        if (auth.startsWith('Bearer ')) {
           final token = auth.substring(7);
           final masked = token.length > 12
               ? '${token.substring(0, 6)}...${token.substring(token.length - 6)}'
@@ -169,8 +169,8 @@ class ApiService {
   static Future<Map<String, dynamic>> deleteReport(String id) async {
     try {
       final headers = _headers(auth: true);
-      var auth = headers['Authorization'] ?? 'none';
-      if (auth is String && auth.startsWith('Bearer ')) {
+      final String auth = headers['Authorization'] ?? 'none';
+      if (auth.startsWith('Bearer ')) {
         final token = auth.substring(7);
         final masked = token.length > 12
             ? '${token.substring(0, 6)}...${token.substring(token.length - 6)}'

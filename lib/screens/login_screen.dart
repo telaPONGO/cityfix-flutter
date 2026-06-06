@@ -78,32 +78,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     )),
               ),
               const SizedBox(height: 18),
-              ElevatedButton.icon(
-                onPressed: () async {
-                  final success = await controller.signInWithGoogle();
-                  if (!success) {
-                    Get.snackbar(
-                        'Error', 'No se pudo iniciar sesión con Google');
-                    return;
-                  }
-                  Get.offAll(const MainNavigation());
-                },
-                icon: Icon(Icons.login,
-                    color: theme.colorScheme.onSurface.withOpacity(0.9)),
-                label: Text('Continuar con Google',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.9),
-                      fontSize: 16,
-                    )),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.surface,
-                  foregroundColor: theme.colorScheme.onSurface,
-                  minimumSize: const Size(double.infinity, 54),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
-                ),
-              ),
-              const SizedBox(height: 18),
               Center(
                 child: GestureDetector(
                   onTap: () {

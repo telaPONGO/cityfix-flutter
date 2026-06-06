@@ -70,7 +70,8 @@ class HomeScreen extends StatelessWidget {
                                   icon: const Icon(Icons.add_box_outlined),
                                   label: const Text('Crear nuevo reporte'),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(14),
                                     ),
@@ -127,7 +128,10 @@ class HomeScreen extends StatelessWidget {
                                             height: 48,
                                             width: 48,
                                             decoration: BoxDecoration(
-                                              color: Colors.blue.shade50,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary
+                                                  .withOpacity(0.1),
                                               borderRadius:
                                                   BorderRadius.circular(12),
                                             ),

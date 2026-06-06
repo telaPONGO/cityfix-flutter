@@ -67,30 +67,32 @@ class _ReportScreenState extends State<ReportScreen> {
     }
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(String title, BuildContext context) {
+    final theme = Theme.of(context);
     return Align(
       alignment: Alignment.centerLeft,
       child: Text(
         title,
-        style: TextStyle(
+        style: theme.textTheme.titleMedium?.copyWith(
           fontWeight: FontWeight.bold,
-          color: Colors.grey[900],
-          fontSize: 16,
+          color: theme.colorScheme.onSurface,
         ),
       ),
     );
   }
 
-  Widget _buildInputCard({required Widget child}) {
+  Widget _buildInputCard(
+      {required Widget child, required BuildContext context}) {
+    final theme = Theme.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: theme.shadowColor.withOpacity(0.08),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -100,7 +102,8 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Widget _buildPhotoCard() {
+  Widget _buildPhotoCard(BuildContext context) {
+    final theme = Theme.of(context);
     return Obx(
       () => GestureDetector(
         onTap: _showImageSourceSheet,
@@ -108,9 +111,10 @@ class _ReportScreenState extends State<ReportScreen> {
           height: 220,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.blue.shade50,
+            color: theme.colorScheme.primary.withOpacity(0.12),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.blue.shade100),
+            border:
+                Border.all(color: theme.colorScheme.primary.withOpacity(0.25)),
           ),
           child: (controller.selectedImagePath.value == null &&
                   controller.selectedImageBytes.value == null)
@@ -119,19 +123,18 @@ class _ReportScreenState extends State<ReportScreen> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.blue.shade100,
+                        color: theme.colorScheme.primary.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       padding: const EdgeInsets.all(14),
-                      child: const Icon(Icons.photo_camera,
-                          size: 36, color: Colors.white),
+                      child: Icon(Icons.photo_camera,
+                          size: 36, color: theme.colorScheme.onPrimary),
                     ),
                     const SizedBox(height: 14),
-                    const Text(
+                    Text(
                       'Agregar imagen del reporte',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.blue,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: theme.colorScheme.primary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -139,7 +142,9 @@ class _ReportScreenState extends State<ReportScreen> {
                     Text(
                       'Toca para seleccionar una foto o tomar una nueva',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.blueGrey[700]),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 )
@@ -173,8 +178,9 @@ class _ReportScreenState extends State<ReportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F7FF),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -185,11 +191,12 @@ class _ReportScreenState extends State<ReportScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
-                    _buildPhotoCard(),
+                    _buildPhotoCard(context),
                     const SizedBox(height: 24),
-                    _buildSectionTitle('Ubicación actual'),
+                    _buildSectionTitle('Ubicación actual', context),
                     const SizedBox(height: 12),
                     _buildInputCard(
+                      context: context,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -199,7 +206,9 @@ class _ReportScreenState extends State<ReportScreen> {
                               hintText: 'Ej: Calle 10 #23-45',
                               prefixIcon: const Icon(Icons.location_on),
                               filled: true,
-                              fillColor: const Color(0xFFF7F9FF),
+                              fillColor: Theme.of(context)
+                                  .inputDecorationTheme
+                                  .fillColor,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(16),
                                 borderSide: BorderSide.none,
@@ -226,7 +235,9 @@ class _ReportScreenState extends State<ReportScreen> {
                                   icon: const Icon(Icons.my_location),
                                   label: const Text('Usar ubicación actual'),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
+                                    backgroundColor: theme.colorScheme.primary,
+                                    foregroundColor:
+                                        theme.colorScheme.onPrimary,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
                                     ),
@@ -243,9 +254,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                 position == null
                                     ? 'Aún no hay coordenadas'
                                     : 'Lat: ${position.latitude.toStringAsFixed(5)}, Lon: ${position.longitude.toStringAsFixed(5)}',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 13,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
                                 ),
                               );
                             },
@@ -254,9 +264,10 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    _buildSectionTitle('Detalles del reporte'),
+                    _buildSectionTitle('Detalles del reporte', context),
                     const SizedBox(height: 12),
                     _buildInputCard(
+                      context: context,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

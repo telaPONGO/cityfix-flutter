@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import '../services/api_service.dart';
 import '../utils/platform_image.dart';
 import '../widgets/app_header.dart';
 
@@ -25,17 +26,29 @@ class ReportDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildImageCard() {
+  String _normalizeImageUrl(String path) {
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+    final apiOrigin = ApiService.baseUrl.replaceFirst(RegExp(r'/api$'), '');
+    if (path.startsWith('/')) {
+      return '$apiOrigin$path';
+    }
+    return '$apiOrigin/$path';
+  }
+
+  Widget _buildImageCard(BuildContext context) {
+    final theme = Theme.of(context);
     final path = report['imagePath'] as String?;
     return Container(
       height: 260,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color: theme.colorScheme.surfaceVariant,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: theme.shadowColor.withOpacity(0.08),
             blurRadius: 15,
             offset: const Offset(0, 10),
           ),
@@ -46,13 +59,14 @@ class ReportDetailScreen extends StatelessWidget {
         child: Builder(builder: (context) {
           if (path == null || path.isEmpty) {
             return Container(
-              color: Colors.grey[300],
-              child: const Center(
-                child: Icon(Icons.image, size: 72, color: Colors.white70),
+              color: theme.colorScheme.surface,
+              child: Center(
+                child: Icon(Icons.image,
+                    size: 72,
+                    color: theme.colorScheme.onSurface.withOpacity(0.35)),
               ),
             );
           }
-          // Handle base64 encoded images
           if (path.startsWith('data:')) {
             final base64Data = path.split(',').last;
             try {
@@ -60,38 +74,42 @@ class ReportDetailScreen extends StatelessWidget {
               return Image.memory(bytes, fit: BoxFit.cover);
             } catch (_) {
               return Container(
-                color: Colors.grey[300],
-                child: const Center(
-                  child:
-                      Icon(Icons.broken_image, size: 72, color: Colors.white70),
+                color: theme.colorScheme.surface,
+                child: Center(
+                  child: Icon(Icons.broken_image,
+                      size: 72,
+                      color: theme.colorScheme.onSurface.withOpacity(0.35)),
                 ),
               );
             }
           }
-          // Handle HTTP/HTTPS URLs from server
-          if (path.startsWith('http://') || path.startsWith('https://')) {
+          final imageUrl = _normalizeImageUrl(path);
+          if (imageUrl.startsWith('http://') ||
+              imageUrl.startsWith('https://')) {
             return Image.network(
-              path,
+              imageUrl,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
-                  color: Colors.grey[300],
-                  child: const Center(
+                  color: theme.colorScheme.surface,
+                  child: Center(
                     child: Icon(Icons.broken_image,
-                        size: 72, color: Colors.white70),
+                        size: 72,
+                        color: theme.colorScheme.onSurface.withOpacity(0.35)),
                   ),
                 );
               },
             );
           }
-          // Handle local file paths (non-web)
           if (!kIsWeb) {
             return buildLocalImage(path, fit: BoxFit.cover);
           }
           return Container(
-            color: Colors.grey[300],
-            child: const Center(
-              child: Icon(Icons.image, size: 72, color: Colors.white70),
+            color: theme.colorScheme.surface,
+            child: Center(
+              child: Icon(Icons.image,
+                  size: 72,
+                  color: theme.colorScheme.onSurface.withOpacity(0.35)),
             ),
           );
         }),
@@ -120,8 +138,9 @@ class ReportDetailScreen extends StatelessWidget {
         ? longitude.toDouble()
         : double.tryParse(longitude?.toString() ?? '');
 
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F7FF),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -133,17 +152,17 @@ class ReportDetailScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildImageCard(),
+                      _buildImageCard(context),
                       const SizedBox(height: 20),
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: theme.cardColor,
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: theme.shadowColor.withOpacity(0.08),
                               blurRadius: 20,
                               offset: const Offset(0, 10),
                             ),
@@ -154,8 +173,8 @@ class ReportDetailScreen extends StatelessWidget {
                           children: [
                             Text(
                               title,
-                              style: const TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.bold),
+                              style: theme.textTheme.headlineSmall
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 12),
                             Row(
@@ -168,13 +187,15 @@ class ReportDetailScreen extends StatelessWidget {
                             const SizedBox(height: 20),
                             Row(
                               children: [
-                                const Icon(Icons.person, color: Colors.grey),
+                                Icon(Icons.person,
+                                    color: theme.colorScheme.onSurfaceVariant),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
                                     'Reportado por $author',
-                                    style:
-                                        const TextStyle(color: Colors.black87),
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: theme.colorScheme.onSurface,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -183,14 +204,15 @@ class ReportDetailScreen extends StatelessWidget {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Icon(Icons.location_on,
-                                    color: Colors.blue),
+                                Icon(Icons.location_on,
+                                    color: theme.colorScheme.primary),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
                                     address,
-                                    style: const TextStyle(
-                                        color: Colors.black87, height: 1.5),
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                        color: theme.colorScheme.onSurface,
+                                        height: 1.5),
                                   ),
                                 ),
                               ],
@@ -202,10 +224,9 @@ class ReportDetailScreen extends StatelessWidget {
                         const SizedBox(height: 20),
                         Text(
                           'Ubicación exacta',
-                          style: TextStyle(
+                          style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: Colors.grey[900],
-                            fontSize: 16,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -216,7 +237,7 @@ class ReportDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(24),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
+                                color: theme.shadowColor.withOpacity(0.08),
                                 blurRadius: 16,
                                 offset: const Offset(0, 10),
                               ),
@@ -257,47 +278,19 @@ class ReportDetailScreen extends StatelessWidget {
                         const SizedBox(height: 12),
                         Text(
                           'Coordenadas: ${lat.toStringAsFixed(5)} / ${lng.toStringAsFixed(5)}',
-                          style: const TextStyle(color: Colors.grey),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
                         ),
                       ],
-                      const SizedBox(height: 20),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(24),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Descripción',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              description,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                height: 1.6,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ],
+                      const SizedBox(height: 24),
+                      Text(
+                        description,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurface,
+                          height: 1.5,
                         ),
                       ),
-                      const SizedBox(height: 24),
                     ],
                   ),
                 ),

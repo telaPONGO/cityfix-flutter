@@ -197,36 +197,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const Text('Registrarse', style: TextStyle(fontSize: 16)),
               ),
               const SizedBox(height: 18),
-              ElevatedButton.icon(
-                onPressed: () async {
-                  final success = await controller.signInWithGoogle();
-                  if (!success) {
-                    Get.snackbar(
-                        'Error', 'No se pudo iniciar sesión con Google');
-                    return;
-                  }
-                  Get.offAll(() => const MainNavigation());
-                },
-                icon: Icon(Icons.login,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.9)),
-                label: Text('Registrarse con Google',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withOpacity(0.9),
-                        fontSize: 16)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.surface,
-                  foregroundColor: Theme.of(context).colorScheme.onSurface,
-                  minimumSize: const Size(double.infinity, 56),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
-                ),
-              )
             ],
           ),
         ),

@@ -8,7 +8,6 @@ import '../widgets/app_header.dart';
 import 'settings_screen.dart';
 import 'my_reports_screen.dart';
 import 'notifications_screen.dart';
-import 'report_detail_screen.dart';
 import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {

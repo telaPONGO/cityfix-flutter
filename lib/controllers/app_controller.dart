@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import '../data/data_service.dart';
 import '../models/report.dart';
@@ -16,7 +15,6 @@ class AppController extends GetxController {
   final Rxn<User> currentUser = Rxn<User>();
   final reports = <Report>[].obs;
   final myReportsList = <Report>[].obs;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
   final hasLoadedMyReports = false.obs;
   final selectedCity = 'Bogotá'.obs;
   final searchText = ''.obs;
@@ -132,36 +130,6 @@ class AppController extends GetxController {
     return true;
   }
 
-  Future<bool> signInWithGoogle() async {
-    try {
-      final account = await _googleSignIn.signIn();
-      if (account == null) {
-        return false;
-      }
-
-      final displayName = account.displayName ?? '';
-      final nameParts = displayName.split(' ');
-      final firstName = nameParts.isNotEmpty ? nameParts.first : '';
-      final lastName =
-          nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
-
-      final user = User(
-        name: firstName.isNotEmpty ? firstName : account.email.split('@').first,
-        lastname: lastName,
-        email: account.email,
-        password: '',
-        profileImage: account.photoUrl,
-      );
-
-      currentUser.value = user;
-      await StorageService.setCurrentUserEmail(user.email);
-      await _saveCurrentUserToStorage();
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
-
   Future<bool> register(User user) async {
     final apiSuccess = await ApiService.register(user);
     if (apiSuccess) {
@@ -239,11 +207,6 @@ class AppController extends GetxController {
   }
 
   void logout() async {
-    try {
-      await _googleSignIn.signOut();
-    } catch (_) {
-      // Ignore Google sign-out failures.
-    }
     currentUser.value = null;
     profileImagePath.value = null;
     profileImageBytes.value = null;
@@ -275,14 +238,16 @@ class AppController extends GetxController {
       preferredCameraDevice: CameraDevice.rear,
     );
     if (pickedFile != null) {
-      if (kIsWeb) {
-        final bytes = await pickedFile.readAsBytes();
-        selectedImageBytes.value = bytes;
-        selectedImagePath.value =
-            'data:image/png;base64,${base64Encode(bytes)}';
-      } else {
-        selectedImagePath.value = pickedFile.path;
-      }
+      final bytes = await pickedFile.readAsBytes();
+      selectedImageBytes.value = bytes;
+
+      final mimeType = pickedFile.path.toLowerCase().endsWith('.png')
+          ? 'image/png'
+          : (pickedFile.path.toLowerCase().endsWith('.jpg') ||
+                  pickedFile.path.toLowerCase().endsWith('.jpeg'))
+              ? 'image/jpeg'
+              : 'image/png';
+      selectedImagePath.value = 'data:$mimeType;base64,${base64Encode(bytes)}';
     }
   }
 
@@ -320,9 +285,9 @@ class AppController extends GetxController {
     await ApiService.init();
     final result = await ApiService.createReport(report);
 
-    if (result == null || result['success'] != true) {
+    if (result['success'] != true) {
       // Propagate error message to UI when available
-      final message = result != null && result['message'] != null
+      final message = result['message'] != null
           ? result['message'].toString()
           : 'Error al enviar reporte';
       return message;

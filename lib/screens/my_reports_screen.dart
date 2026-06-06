@@ -26,6 +26,7 @@ class MyReportsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<AppController>();
 
+    final theme = Theme.of(context);
     return Scaffold(
       body: Column(
         children: [
@@ -35,7 +36,9 @@ class MyReportsScreen extends StatelessWidget {
               () {
                 final myReports = controller.myReports;
                 if (myReports.isEmpty) {
-                  return const Center(child: Text('No tienes reportes'));
+                  return Center(
+                      child: Text('No tienes reportes',
+                          style: theme.textTheme.bodyMedium));
                 }
                 return RefreshIndicator(
                   onRefresh: controller.refreshMyReports,
@@ -45,6 +48,7 @@ class MyReportsScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final report = myReports[index];
                       return Card(
+                        color: theme.cardColor,
                         margin: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8),
                         elevation: 2,
@@ -55,17 +59,21 @@ class MyReportsScreen extends StatelessWidget {
                             width: 46,
                             height: 46,
                             decoration: BoxDecoration(
-                              color: Colors.blue.shade50,
+                              color:
+                                  theme.colorScheme.primary.withOpacity(0.12),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child:
                                 Center(child: _categoryIcon(report.categoria)),
                           ),
-                          title: Text(report.titulo.isEmpty
-                              ? 'Sin título'
-                              : report.titulo),
+                          title: Text(
+                              report.titulo.isEmpty
+                                  ? 'Sin título'
+                                  : report.titulo,
+                              style: theme.textTheme.titleMedium),
                           subtitle: Text(
-                              '${report.estado} • ${report.direccion.isEmpty ? 'Sin dirección' : report.direccion}'),
+                              '${report.estado} • ${report.direccion.isEmpty ? 'Sin dirección' : report.direccion}',
+                              style: theme.textTheme.bodySmall),
                           trailing: IconButton(
                             icon: const Icon(Icons.delete_forever,
                                 color: Colors.redAccent),
