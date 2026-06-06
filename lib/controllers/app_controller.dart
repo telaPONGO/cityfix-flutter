@@ -264,6 +264,22 @@ class AppController extends GetxController {
   }) async {
     if (currentUser.value == null) return 'No autenticado';
 
+    String? imagePathToSend = selectedImagePath.value;
+    if (imagePathToSend != null &&
+        !imagePathToSend.startsWith('data:') &&
+        !imagePathToSend.startsWith('http://') &&
+        !imagePathToSend.startsWith('https://') &&
+        selectedImageBytes.value != null) {
+      final mimeType = imagePathToSend.toLowerCase().endsWith('.png')
+          ? 'image/png'
+          : (imagePathToSend.toLowerCase().endsWith('.jpg') ||
+                  imagePathToSend.toLowerCase().endsWith('.jpeg'))
+              ? 'image/jpeg'
+              : 'image/png';
+      imagePathToSend =
+          'data:$mimeType;base64,${base64Encode(selectedImageBytes.value!)}';
+    }
+
     final report = Report(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       titulo: titulo,
@@ -276,7 +292,7 @@ class AppController extends GetxController {
       userLastname: currentUser.value!.lastname,
       ciudad: selectedCity.value,
       categoria: selectedCategory.value,
-      imagePath: selectedImagePath.value,
+      imagePath: imagePathToSend,
       latitude: currentPosition.value?.latitude,
       longitude: currentPosition.value?.longitude,
     );
