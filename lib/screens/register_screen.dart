@@ -5,6 +5,7 @@ import '../controllers/app_controller.dart';
 import '../utils/platform_image.dart';
 import '../widgets/custom_input.dart';
 import '../models/user.dart';
+import 'main_navigation.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -190,6 +191,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 },
                 child:
                     const Text('Registrarse', style: TextStyle(fontSize: 16)),
+              ),
+              const SizedBox(height: 18),
+              ElevatedButton.icon(
+                onPressed: () async {
+                  final success = await controller.signInWithGoogle();
+                  if (!success) {
+                    Get.snackbar(
+                        'Error', 'No se pudo iniciar sesión con Google');
+                    return;
+                  }
+                  Get.offAll(() => const MainNavigation());
+                },
+                icon: const Icon(Icons.login, color: Colors.black87),
+                label: const Text('Registrarse con Google',
+                    style: TextStyle(color: Colors.black87, fontSize: 16)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black87,
+                  minimumSize: const Size(double.infinity, 56),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                ),
               )
             ],
           ),

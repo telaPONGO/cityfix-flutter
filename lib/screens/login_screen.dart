@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Get.snackbar('Error', 'Credenciales incorrectas');
                     return;
                   }
-                  Get.offAll(() => const MainNavigation());
+                  Get.offAll(const MainNavigation());
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
@@ -67,6 +67,28 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(16)),
                 ),
                 child: const Text('Entrar', style: TextStyle(fontSize: 16)),
+              ),
+              const SizedBox(height: 18),
+              ElevatedButton.icon(
+                onPressed: () async {
+                  final success = await controller.signInWithGoogle();
+                  if (!success) {
+                    Get.snackbar(
+                        'Error', 'No se pudo iniciar sesión con Google');
+                    return;
+                  }
+                  Get.offAll(const MainNavigation());
+                },
+                icon: const Icon(Icons.login, color: Colors.black87),
+                label: const Text('Continuar con Google',
+                    style: TextStyle(color: Colors.black87, fontSize: 16)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black87,
+                  minimumSize: const Size(double.infinity, 54),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                ),
               ),
               const SizedBox(height: 18),
               Center(

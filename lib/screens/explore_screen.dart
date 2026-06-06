@@ -90,48 +90,52 @@ class ExploreScreen extends StatelessWidget {
                       Expanded(
                         child: controller.filteredReports.isEmpty
                             ? const Center(child: Text('No hay resultados'))
-                            : ListView.builder(
-                                itemCount: controller.filteredReports.length,
-                                itemBuilder: (context, index) {
-                                  final report =
-                                      controller.filteredReports[index];
-                                  return Card(
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(16)),
-                                    margin: const EdgeInsets.only(bottom: 12),
-                                    child: ListTile(
-                                      leading: Container(
-                                        width: 46,
-                                        height: 46,
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue.shade50,
+                            : RefreshIndicator(
+                                onRefresh: controller.refreshReports,
+                                child: ListView.builder(
+                                  itemCount: controller.filteredReports.length,
+                                  itemBuilder: (context, index) {
+                                    final report =
+                                        controller.filteredReports[index];
+                                    return Card(
+                                      elevation: 2,
+                                      shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        child: Center(
-                                          child:
-                                              _categoryIcon(report.categoria),
-                                        ),
-                                      ),
-                                      title: Text(report.titulo.isEmpty
-                                          ? 'Sin título'
-                                          : report.titulo),
-                                      subtitle: Text(
-                                          '${report.estado} • ${report.direccion.isEmpty ? 'Sin dirección' : report.direccion}'),
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (_) => ReportDetailScreen(
-                                                report: report.toJson()),
+                                              BorderRadius.circular(16)),
+                                      margin: const EdgeInsets.only(bottom: 12),
+                                      child: ListTile(
+                                        leading: Container(
+                                          width: 46,
+                                          height: 46,
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue.shade50,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
                                           ),
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
+                                          child: Center(
+                                            child:
+                                                _categoryIcon(report.categoria),
+                                          ),
+                                        ),
+                                        title: Text(report.titulo.isEmpty
+                                            ? 'Sin título'
+                                            : report.titulo),
+                                        subtitle: Text(
+                                            '${report.estado} • ${report.direccion.isEmpty ? 'Sin dirección' : report.direccion}'),
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) =>
+                                                  ReportDetailScreen(
+                                                      report: report.toJson()),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
                       ),
                     ],

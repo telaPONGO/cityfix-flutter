@@ -108,49 +108,55 @@ class HomeScreen extends StatelessWidget {
                         Expanded(
                           child: recentReports.isEmpty
                               ? const Center(child: Text('No hay reportes aún'))
-                              : ListView.builder(
-                                  itemCount: recentReports.length,
-                                  itemBuilder: (context, index) {
-                                    final report = recentReports[index];
-                                    return Card(
-                                      elevation: 2,
-                                      margin: const EdgeInsets.only(bottom: 12),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      child: ListTile(
-                                        leading: Container(
-                                          height: 48,
-                                          width: 48,
-                                          decoration: BoxDecoration(
-                                            color: Colors.blue.shade50,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          child: Center(
-                                            child:
-                                                _categoryIcon(report.categoria),
-                                          ),
+                              : RefreshIndicator(
+                                  onRefresh: controller.refreshReports,
+                                  child: ListView.builder(
+                                    itemCount: recentReports.length,
+                                    itemBuilder: (context, index) {
+                                      final report = recentReports[index];
+                                      return Card(
+                                        elevation: 2,
+                                        margin:
+                                            const EdgeInsets.only(bottom: 12),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
                                         ),
-                                        title: Text(report.titulo.isEmpty
-                                            ? 'Sin título'
-                                            : report.titulo),
-                                        subtitle: Text(
-                                          '${report.estado} • ${report.direccion.isEmpty ? 'Sin dirección' : report.direccion}',
-                                        ),
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (_) =>
-                                                  ReportDetailScreen(
-                                                      report: report.toJson()),
+                                        child: ListTile(
+                                          leading: Container(
+                                            height: 48,
+                                            width: 48,
+                                            decoration: BoxDecoration(
+                                              color: Colors.blue.shade50,
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                             ),
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
+                                            child: Center(
+                                              child: _categoryIcon(
+                                                  report.categoria),
+                                            ),
+                                          ),
+                                          title: Text(report.titulo.isEmpty
+                                              ? 'Sin título'
+                                              : report.titulo),
+                                          subtitle: Text(
+                                            '${report.estado} • ${report.direccion.isEmpty ? 'Sin dirección' : report.direccion}',
+                                          ),
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (_) =>
+                                                    ReportDetailScreen(
+                                                        report:
+                                                            report.toJson()),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                         ),
                       ],
