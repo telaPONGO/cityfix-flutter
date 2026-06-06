@@ -288,7 +288,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               decoration: InputDecoration(
                                 labelText: 'Categoría',
                                 filled: true,
-                                fillColor: const Color(0xFFF7F9FF),
+                                fillColor: theme.inputDecorationTheme.fillColor,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16),
                                   borderSide: BorderSide.none,
@@ -303,7 +303,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               labelText: 'Título del reporte',
                               hintText: 'Ej: Hueco peligroso en la vía',
                               filled: true,
-                              fillColor: const Color(0xFFF7F9FF),
+                              fillColor: theme.inputDecorationTheme.fillColor,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(16),
                                 borderSide: BorderSide.none,
@@ -318,7 +318,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               labelText: 'Descripción del problema',
                               alignLabelWithHint: true,
                               filled: true,
-                              fillColor: const Color(0xFFF7F9FF),
+                              fillColor: theme.inputDecorationTheme.fillColor,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(16),
                                 borderSide: BorderSide.none,
@@ -392,7 +392,9 @@ class _ReportScreenState extends State<ReportScreen> {
                             : const Text(
                                 'Enviar reporte',
                                 style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w600),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
                               ),
                       ),
                     ),
