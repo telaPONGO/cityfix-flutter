@@ -56,8 +56,11 @@ class _MainNavigationState extends State<MainNavigation>
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
         onTap: onItemTapped,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor:
+            Theme.of(context).colorScheme.onSurface.withOpacity(0.65),
+        backgroundColor:
+            Theme.of(context).bottomNavigationBarTheme.backgroundColor,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

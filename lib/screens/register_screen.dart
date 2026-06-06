@@ -98,7 +98,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onTap: controller.pickProfileImage,
                     child: CircleAvatar(
                       radius: 46,
-                      backgroundColor: Colors.blue.shade100,
+                      backgroundColor: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.15),
                       child: ClipOval(child: imageWidget()),
                     ),
                   );
@@ -141,7 +144,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 28),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
                   padding: const EdgeInsets.symmetric(vertical: 16),
@@ -203,12 +207,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   }
                   Get.offAll(() => const MainNavigation());
                 },
-                icon: const Icon(Icons.login, color: Colors.black87),
-                label: const Text('Registrarse con Google',
-                    style: TextStyle(color: Colors.black87, fontSize: 16)),
+                icon: Icon(Icons.login,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.9)),
+                label: Text('Registrarse con Google',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.9),
+                        fontSize: 16)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black87,
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  foregroundColor: Theme.of(context).colorScheme.onSurface,
                   minimumSize: const Size(double.infinity, 56),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),

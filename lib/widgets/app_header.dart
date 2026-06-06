@@ -12,20 +12,25 @@ class AppHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final primaryContainer = theme.colorScheme.primaryContainer;
+    final onPrimary = theme.colorScheme.onPrimary;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF3B82F6), Color(0xFF0D47A1)],
+          colors: [primary, primaryContainer],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(24),
           bottomRight: Radius.circular(24),
         ),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Color(0x1F000000),
             blurRadius: 12,
@@ -37,7 +42,7 @@ class AppHeader extends StatelessWidget {
         children: [
           if (showBack)
             IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              icon: Icon(Icons.arrow_back, color: onPrimary),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -46,9 +51,8 @@ class AppHeader extends StatelessWidget {
             child: Center(
               child: Text(
                 title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: onPrimary,
                   fontWeight: FontWeight.bold,
                 ),
               ),

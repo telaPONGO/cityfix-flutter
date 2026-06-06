@@ -19,6 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -27,13 +29,16 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 60),
-              const Text(
+              Text(
                 'Bienvenido a CityFix',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                style: theme.textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
-              const Text(
-                  'Accede para guardar tus reportes y usar tus preferencias.'),
+              Text(
+                'Accede para guardar tus reportes y usar tus preferencias.',
+                style: theme.textTheme.bodyMedium,
+              ),
               const SizedBox(height: 30),
               CustomInput(
                 icon: Icons.email,
@@ -61,12 +66,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   Get.offAll(const MainNavigation());
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: theme.colorScheme.primary,
                   minimumSize: const Size(double.infinity, 54),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
                 ),
-                child: const Text('Entrar', style: TextStyle(fontSize: 16)),
+                child: Text('Entrar',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: theme.colorScheme.onPrimary,
+                      fontSize: 16,
+                    )),
               ),
               const SizedBox(height: 18),
               ElevatedButton.icon(
@@ -79,12 +88,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   Get.offAll(const MainNavigation());
                 },
-                icon: const Icon(Icons.login, color: Colors.black87),
-                label: const Text('Continuar con Google',
-                    style: TextStyle(color: Colors.black87, fontSize: 16)),
+                icon: Icon(Icons.login,
+                    color: theme.colorScheme.onSurface.withOpacity(0.9)),
+                label: Text('Continuar con Google',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.9),
+                      fontSize: 16,
+                    )),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black87,
+                  backgroundColor: theme.colorScheme.surface,
+                  foregroundColor: theme.colorScheme.onSurface,
                   minimumSize: const Size(double.infinity, 54),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),

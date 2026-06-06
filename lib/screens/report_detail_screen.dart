@@ -52,6 +52,7 @@ class ReportDetailScreen extends StatelessWidget {
               ),
             );
           }
+          // Handle base64 encoded images
           if (path.startsWith('data:')) {
             final base64Data = path.split(',').last;
             try {
@@ -67,6 +68,23 @@ class ReportDetailScreen extends StatelessWidget {
               );
             }
           }
+          // Handle HTTP/HTTPS URLs from server
+          if (path.startsWith('http://') || path.startsWith('https://')) {
+            return Image.network(
+              path,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: Colors.grey[300],
+                  child: const Center(
+                    child: Icon(Icons.broken_image,
+                        size: 72, color: Colors.white70),
+                  ),
+                );
+              },
+            );
+          }
+          // Handle local file paths (non-web)
           if (!kIsWeb) {
             return buildLocalImage(path, fit: BoxFit.cover);
           }

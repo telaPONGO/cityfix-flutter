@@ -22,6 +22,15 @@ class CustomInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final inputTheme = theme.inputDecorationTheme;
+    final fillColor = inputTheme.fillColor ??
+        (theme.brightness == Brightness.dark
+            ? theme.colorScheme.surfaceVariant
+            : Colors.grey[100]);
+    final iconColor = inputTheme.prefixIconColor ??
+        theme.colorScheme.onSurface.withOpacity(0.7);
+
     return TextField(
       controller: controller,
       obscureText: isPassword,
@@ -29,10 +38,12 @@ class CustomInput extends StatelessWidget {
       keyboardType: keyboardType,
       onTap: onTap,
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Colors.grey),
+        prefixIcon: Icon(icon, color: iconColor),
         hintText: hint,
+        hintStyle: inputTheme.hintStyle ??
+            TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.6)),
         filled: true,
-        fillColor: Colors.grey[100],
+        fillColor: fillColor,
         contentPadding: const EdgeInsets.symmetric(vertical: 18),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
