@@ -1,0 +1,19 @@
+# Flutter
+build/
+.dart_tool/
+.packages
+.pub/
+.pub-cache/
+
+# Android Studio / VS Code
+.idea/
+.vscode/
+
+# Generated
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+
+# APKs
+*.apk
+*.aab

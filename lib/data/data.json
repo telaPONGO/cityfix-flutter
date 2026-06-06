@@ -1,0 +1,19 @@
+{
+  "users": [
+    {
+      "name": "Luis",
+      "email": "luis@email.com",
+      "password": "1234"
+    }
+  ],
+  "reports": [
+    {
+      "descripcion": "Hueco en la calle",
+      "estado": "Pendiente",
+      "fecha": "2026-04-23",
+      "direccion": "Calle 10 #20-30",
+      "user": "luis@email.com",
+      "ciudad": "Bogotá"
+    }
+  ]
+}
